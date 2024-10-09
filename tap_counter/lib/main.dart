@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:english_words/english_words.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const MyApp()); // Tells Flutter to run the app defined in MyApp.
 }
 
 class MyApp extends StatelessWidget {
+  // Widgets = elements used to build the Flutter App. The App ITSELF is a widget.
   const MyApp({super.key});
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    // build is called everytim the widget's circumstances change so the widget is always up to date.
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
@@ -28,12 +31,17 @@ class MyApp extends StatelessWidget {
         //
         // This works for code too, not just values: Most code changes can be
         // tested with just a hot reload.
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(
+            seedColor: const Color.fromRGBO(36, 48, 208, 0.72)),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const MyHomePage(title: 'Tap Counter'),
     );
   }
+}
+
+class MyAppState extends ChangeNotifier {
+  var current = WordPair.random();
 }
 
 class MyHomePage extends StatefulWidget {
@@ -112,12 +120,17 @@ class _MyHomePageState extends State<MyHomePage> {
               '$_counter',
               style: Theme.of(context).textTheme.headlineMedium,
             ),
+            ElevatedButton(
+                onPressed: () {
+                  print('button pressed');
+                },
+                child: Text('Next'))
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _incrementCounter,
-        tooltip: 'Increment',
+        tooltip: 'Count',
         child: const Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
