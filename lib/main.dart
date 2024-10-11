@@ -32,6 +32,18 @@ class MyAppState extends ChangeNotifier {
     current = WordPair.random();
     notifyListeners();
   }
+
+  var favorites = <WordPair>{}; // Initializes the favorites property.
+  //Ensured only 'WordPair's are added to the list.
+  // Created a Set to store WordPairs.
+  void toggleFavorite() {
+    if (favorites.contains(current)) {
+      favorites.remove(current);
+    } else {
+      favorites.add(current);
+    }
+    notifyListeners();
+  }
 }
 
 class MyHomePage extends StatelessWidget {
@@ -42,19 +54,44 @@ class MyHomePage extends StatelessWidget {
         MyAppState>(); // Changes to the app's current state using `watch` method.
     var pair = appState.current;
 
+    IconData icon;
+    if (appState.favorites.contains(pair)) {
+      icon = Icons.favorite;
+    } else {
+      icon = Icons.favorite_border;
+    }
+
     // Every build method MUST return a widget (or tree of widgets).
     return Scaffold(
-      body: Column(
-        children: [
-          Text('New words:'),
-          BigCard(pair: pair),
-          ElevatedButton(
-            onPressed: () {
-              appState.getNext();
-            },
-            child: Text('Next'),
-          )
-        ],
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            // Text('New words:'),// removing this looks cleaner.
+            BigCard(pair: pair),
+            SizedBox(
+                height: 10), // Adds separation between the card and button.
+            Row(
+              mainAxisSize: MainAxisSize
+                  .min, // Tells Row to not take all available horizontal space.
+              children: [
+                ElevatedButton.icon(
+                    onPressed: () {
+                      appState.toggleFavorite();
+                    },
+                    icon: Icon(icon),
+                    label: Text('Favorite')),
+                SizedBox(width: 10),
+                ElevatedButton(
+                  onPressed: () {
+                    appState.getNext();
+                  },
+                  child: Text('Next'),
+                ),
+              ],
+            )
+          ],
+        ),
       ),
     );
   }
@@ -81,9 +118,14 @@ class BigCard extends StatelessWidget {
     return Card(
       color: theme.colorScheme
           .primary, // Defines the card's color to match the theme's `colorScheme`
+      elevation: 3,
       child: Padding(
         padding: const EdgeInsets.all(20.0),
-        child: Text(pair.asCamelCase, style: style),
+        child: Text(
+          pair.asLowerCase,
+          style: style,
+          semanticsLabel: "${pair.first} ${pair.second}",
+        ),
       ),
     );
   }
