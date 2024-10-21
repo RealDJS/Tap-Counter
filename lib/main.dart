@@ -122,13 +122,10 @@ class _MyHomePageState extends State<MyHomePage> {
     switch (selectedIndex) {
       case 0:
         page = GeneratorPage();
-        break;
       case 1:
         page = FavoritesPage();
-        break;
       case 2:
         page = TapCountPage();
-        break;
       default:
         throw UnimplementedError('no widget for $selectedIndex');
     }
@@ -259,7 +256,7 @@ class TapCountPage extends StatelessWidget {
   Widget build(BuildContext context) {
     var appState = context.watch<MyAppState>();
 
-    IconData icon;
+    // IconData icon;
 
     return Center(
       child: Column(
@@ -275,6 +272,7 @@ class TapCountPage extends StatelessWidget {
             ),
           ),
           Text('Taps: ${appState.taps}'),
+          Image.asset('assets/images/thumbs_up.jpg')
         ],
       ),
     );
