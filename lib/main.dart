@@ -27,6 +27,14 @@ class MyApp extends StatelessWidget {
 
 class MyAppState extends ChangeNotifier {
   var current = WordPair.random();
+  int _taps = 0;
+
+  int get taps => _taps;
+
+  void incrementTaps() {
+    _taps++;
+    notifyListeners();
+  }
 
   void getNext() {
     current = WordPair.random();
@@ -118,6 +126,9 @@ class _MyHomePageState extends State<MyHomePage> {
       case 1:
         page = FavoritesPage();
         break;
+      case 2:
+        page = TapCountPage();
+        break;
       default:
         throw UnimplementedError('no widget for $selectedIndex');
     }
@@ -139,6 +150,10 @@ class _MyHomePageState extends State<MyHomePage> {
                     icon: Icon(Icons.favorite),
                     label: Text('Favorites'),
                   ),
+                  NavigationRailDestination(
+                    icon: Icon(Icons.thumb_up),
+                    label: Text('Tap Counter'),
+                  )
                 ],
                 selectedIndex: selectedIndex,
                 onDestinationSelected: (value) {
@@ -234,6 +249,33 @@ class BigCard extends StatelessWidget {
           style: style,
           semanticsLabel: "${pair.first} ${pair.second}",
         ),
+      ),
+    );
+  }
+}
+
+class TapCountPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    var appState = context.watch<MyAppState>();
+
+    IconData icon;
+
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: ElevatedButton.icon(
+              onPressed: () {
+                appState.incrementTaps();
+              },
+              label: Text('Tap'),
+            ),
+          ),
+          Text('Taps: ${appState.taps}'),
+        ],
       ),
     );
   }
